@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { 
   ChevronRight, 
@@ -69,6 +70,28 @@ export default function App() {
 
   const handleBrideChange = (field: keyof BrideProfile, value: any) => {
     setBrideData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Helper for inputs with commas
+  const handleFormattedChange = (
+    e: React.ChangeEvent<HTMLInputElement>, 
+    setter: React.Dispatch<React.SetStateAction<any>>, 
+    field: string
+  ) => {
+    // Remove all non-digit characters to ensure integer
+    const rawValue = e.target.value.replace(/\D/g, '');
+    
+    if (rawValue === '') {
+      setter((prev: any) => ({ ...prev, [field]: 0 }));
+    } else {
+      setter((prev: any) => ({ ...prev, [field]: parseInt(rawValue, 10) }));
+    }
+  };
+
+  const resetApp = () => {
+    setStep(0);
+    setResult(null);
+    setAiInsight(null);
   };
 
   const nextStep = () => setStep(prev => prev + 1);
@@ -242,25 +265,30 @@ export default function App() {
 
       <Input
         label="Monthly Income"
-        type="number"
-        value={groomData.monthlyIncome || ''}
-        onChange={(e) => handleGroomChange('monthlyIncome', parseFloat(e.target.value))}
-        placeholder="e.g. 5000"
+        type="text"
+        inputMode="numeric"
+        value={groomData.monthlyIncome ? groomData.monthlyIncome.toLocaleString() : ''}
+        onChange={(e) => handleFormattedChange(e, setGroomData, 'monthlyIncome')}
+        placeholder="e.g. 5,000"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input
           label="Total Savings"
-          type="number"
-          value={groomData.savings || ''}
-          onChange={(e) => handleGroomChange('savings', parseFloat(e.target.value))}
+          type="text"
+          inputMode="numeric"
+          value={groomData.savings ? groomData.savings.toLocaleString() : ''}
+          onChange={(e) => handleFormattedChange(e, setGroomData, 'savings')}
+          placeholder="e.g. 10,000"
         />
         <Input
           label="Total Debt"
-          type="number"
-          value={groomData.debtAmount || ''}
-          onChange={(e) => handleGroomChange('debtAmount', parseFloat(e.target.value))}
+          type="text"
+          inputMode="numeric"
+          value={groomData.debtAmount ? groomData.debtAmount.toLocaleString() : ''}
+          onChange={(e) => handleFormattedChange(e, setGroomData, 'debtAmount')}
           subtext="Student loans, credit card debt, etc."
+          placeholder="e.g. 0"
         />
       </div>
 
@@ -295,15 +323,19 @@ export default function App() {
         <div className="grid grid-cols-2 gap-4">
           <Input
             label="Minimum"
-            type="number"
-            value={brideData.expectedMinMahr || ''}
-            onChange={(e) => handleBrideChange('expectedMinMahr', parseFloat(e.target.value))}
+            type="text"
+            inputMode="numeric"
+            value={brideData.expectedMinMahr ? brideData.expectedMinMahr.toLocaleString() : ''}
+            onChange={(e) => handleFormattedChange(e, setBrideData, 'expectedMinMahr')}
+            placeholder="e.g. 2,000"
           />
           <Input
             label="Maximum"
-            type="number"
-            value={brideData.expectedMaxMahr || ''}
-            onChange={(e) => handleBrideChange('expectedMaxMahr', parseFloat(e.target.value))}
+            type="text"
+            inputMode="numeric"
+            value={brideData.expectedMaxMahr ? brideData.expectedMaxMahr.toLocaleString() : ''}
+            onChange={(e) => handleFormattedChange(e, setBrideData, 'expectedMaxMahr')}
+            placeholder="e.g. 10,000"
           />
         </div>
       </div>
@@ -653,11 +685,7 @@ export default function App() {
 
         <div className="flex flex-col md:flex-row gap-4 pt-6 justify-center">
            <button 
-            onClick={() => {
-                setStep(0);
-                setResult(null);
-                setAiInsight(null);
-            }}
+            onClick={resetApp}
             className="flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-mahr-charcoal/20 text-mahr-charcoal/70 hover:bg-white transition-colors font-sans"
            >
              <RefreshCw className="w-4 h-4" /> Start Over
@@ -680,7 +708,10 @@ export default function App() {
       {/* Header */}
       <nav className="bg-mahr-cream/90 backdrop-blur-sm border-b border-mahr-gold/20 sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 font-serif text-xl font-bold text-mahr-emerald">
+          <div 
+            onClick={resetApp} 
+            className="flex items-center gap-2 font-serif text-xl font-bold text-mahr-emerald cursor-pointer hover:opacity-80 transition-opacity"
+          >
             <HeartHandshake className="w-6 h-6" />
             <span>MahrCalc</span>
           </div>
