@@ -163,9 +163,22 @@ export default function App() {
       <h1 className="text-4xl md:text-5xl font-serif font-bold text-mahr-emerald mb-4">
         مهر Predictor
       </h1>
-      <p className="text-lg text-mahr-charcoal/80 max-w-xl mb-8 leading-relaxed font-sans">
+      <p className="text-lg text-mahr-charcoal/80 max-w-xl mb-6 leading-relaxed font-sans">
         Find a fair, culturally-aligned Mahr estimate. We blend financial reality with prophetic wisdom to help you start your journey with clarity and barakah.
       </p>
+
+      {/* Demo Video */}
+      <div className="w-full max-w-xl mb-10">
+        <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+          <iframe
+            className="absolute top-0 left-0 w-full h-full rounded-2xl shadow-lg border border-mahr-gold/30"
+            src="https://www.youtube.com/embed/8cilUHx8Res"
+            title="MahrCalc Demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </div>
       <button 
         onClick={nextStep}
         className="group bg-mahr-emerald hover:bg-emerald-900 text-white text-lg font-medium py-4 px-10 rounded-full transition-all shadow-lg hover:shadow-xl flex items-center gap-2 mb-20 font-sans"
